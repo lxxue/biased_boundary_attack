@@ -20,6 +20,9 @@ class SamplingProvider:
     crash if running >2 threads. For that reason, we wrote this util so we can fill (and block on) multiple deques with a single thread.
     """
     def __init__(self, shape, n_threads=1, queue_lengths=40):
+        # lixin
+        self.texture_imgs = np.load("/mnt/lixxue/thesis/texture_imgs_normalized.npy")
+        print("texture_imgs at /mnt/lixxue/thesis/texture_imgs_normalized.npy loaded")
         self.shape = shape
         self.n_threads = n_threads
         self.queue_lengths = queue_lengths
@@ -39,6 +42,7 @@ class SamplingProvider:
             thread = threading.Thread(target=self._thread_fun, args=(thread_id,))
             thread.start()
             self.threads.append(thread)
+
 
     def __enter__(self):
         # Threads already started at __init__
@@ -68,7 +72,7 @@ class SamplingProvider:
 
     def _thread_fun(self, thread_id):
         # create a thread-specifc RNG
-        rng = randomgen.RandomGenerator(randomgen.Xoroshiro128(seed=20 + thread_id))
+        # rng = randomgen.RandomGenerator(randomgen.Xoroshiro128(seed=20 + thread_id))
         rnd_normal = None
         rnd_perlin = None
 
@@ -77,7 +81,9 @@ class SamplingProvider:
 
             # Prepare one of each sampling patterns
             if rnd_normal is None:
-                rnd_normal = rng.standard_normal(size=self.shape, dtype='float32')
+                # rnd_normal = rng.standard_normal(size=self.shape, dtype='float32')
+                rnd_idx = np.random.randint(0, 5640)
+                rnd_normal = self.texture_imgs[rnd_idx]
                 rnd_normal /= np.linalg.norm(rnd_normal)
             if rnd_perlin is None:
                 rnd_perlin = create_perlin_noise(px=self.shape[0], color=self.perlin_color, batch_size=1,

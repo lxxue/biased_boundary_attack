@@ -24,7 +24,7 @@ def main():
     n_classes = 1000
     img_shape = (299, 299, 3)
 
-    imagenet_base_path = "/path/to/ILSVRC2017/ILSVRC/"
+    imagenet_base_path = "/mnt/lixxue/ILSVRC/"
     y_val = dataset_imagenet.load_dataset_y_val(imagenet_base_path, limit=None)
 
     # Run benchmark over entire ImageNet validation set. You may want to select a shuffled subset instead.
@@ -59,7 +59,7 @@ def main():
                     print("Image {}, original clsid={} ({}), target clsid={} ({}):".format(i_img, clsid_gt, label_to_name(clsid_gt),
                                                                                            clsid_target, label_to_name(clsid_target)))
 
-                    img_log_dir_final = os.path.join("out_imagenet_bench{}".format(bench_settings.EXPERIMENT_SUFFIX), "{}".format(i_img))
+                    img_log_dir_final = os.path.join("/mnt/lixxue/bba_result/", "out_imagenet_bench{}".format(bench_settings.EXPERIMENT_SUFFIX), "{}".format(i_img))
                     img_log_dir = img_log_dir_final + ".inprog"
 
                     if os.path.exists(img_log_dir_final) or os.path.exists(img_log_dir):
